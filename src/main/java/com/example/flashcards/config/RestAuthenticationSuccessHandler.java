@@ -14,7 +14,7 @@ public class RestAuthenticationSuccessHandler extends SimpleUrlAuthenticationSuc
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
                                         Authentication authentication) throws IOException, ServletException {
-        response.getWriter().append("successfully logged as" + authentication.getName());
+        response.getWriter().append("successfully logged as " + authentication.getName());
         clearAuthenticationAttributes(request);
     }
 }

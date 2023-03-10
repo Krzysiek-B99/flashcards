@@ -34,7 +34,7 @@ public class FlashcardsApplication {
             FlashcardSet set = new FlashcardSet("set1");
             set.getFlashcards().add(flashcard);
             setRepository.save(set);
-            User user = new User("user1","haslo1");
+            User user = new User("user1",passwordEncoder.getPasswordEncoder().encode("haslo1"));
             user.getSets().add(set);
             userRepository.save(user);
 
