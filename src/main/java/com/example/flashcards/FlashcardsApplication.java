@@ -1,6 +1,10 @@
 package com.example.flashcards;
 
+import com.example.flashcards.entity.Flashcard;
+import com.example.flashcards.entity.FlashcardSet;
 import com.example.flashcards.entity.User;
+import com.example.flashcards.repository.FlashcardRepository;
+import com.example.flashcards.repository.SetRepository;
 import com.example.flashcards.repository.UserRepository;
 import com.example.flashcards.util.CustomPasswordEncoder;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,10 +26,19 @@ public class FlashcardsApplication {
     @Autowired
     private CustomPasswordEncoder passwordEncoder;
     @Bean
-    public CommandLineRunner fillUserDB(UserRepository userRepository){
+    public CommandLineRunner fillUserDB(UserRepository userRepository, FlashcardRepository flashcardRepository, SetRepository setRepository){
         return args -> {
 
-            userRepository.save(new User("user1",passwordEncoder.getPasswordEncoder().encode("haslo1")));
+            Flashcard flashcard = new Flashcard("front","back");
+            flashcardRepository.save(flashcard);
+            FlashcardSet set = new FlashcardSet("set1");
+            set.getFlashcards().add(flashcard);
+            setRepository.save(set);
+            User user = new User("user1","haslo1");
+            user.getSets().add(set);
+            userRepository.save(user);
+
+
 
         };
     }
