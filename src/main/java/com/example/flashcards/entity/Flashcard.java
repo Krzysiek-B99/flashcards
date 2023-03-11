@@ -14,9 +14,8 @@ import java.util.UUID;
 public class Flashcard {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "id", nullable = false, columnDefinition = "UUID default gen_random_uuid()")
-    private UUID id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
     private String front;
 

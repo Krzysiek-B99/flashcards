@@ -1,5 +1,6 @@
 package com.example.flashcards.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -18,14 +19,17 @@ import java.util.UUID;
 public class FlashcardSet {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "id", nullable = false, columnDefinition = "UUID default gen_random_uuid()")
-    private UUID id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
     private String name;
 
     @OneToMany
     private Set<Flashcard> flashcards = new HashSet<>();
+
+    @ManyToOne
+    @JsonIgnore
+    private User user;
 
     public FlashcardSet(String name) {
         this.name = name;

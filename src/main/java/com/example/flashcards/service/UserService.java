@@ -18,7 +18,6 @@ public class UserService implements UserDetailsService {
 
     private final UserRepository userRepository;
     private final CustomPasswordEncoder passwordEncoder;
-
     private final SetRepository setRepository;
 
     public UserService(UserRepository userRepository, CustomPasswordEncoder passwordEncoder, SetRepository setRepository) {
@@ -43,17 +42,4 @@ public class UserService implements UserDetailsService {
                 .orElseThrow(()->new UsernameNotFoundException(""));
     }
 
-    public void addSet(String username, FlashcardSet set){
-        setRepository.save(set);
-        User user = userRepository.findByUsername(username)
-                .orElseThrow(()->new UsernameNotFoundException("login error"));
-        user.getSets().add(set);
-        userRepository.save(user);
-    }
-
-    public Set<FlashcardSet> getSets(String username) {
-        User user = userRepository.findByUsername(username)
-                .orElseThrow(()->new UsernameNotFoundException("login error"));
-        return user.getSets();
-    }
 }

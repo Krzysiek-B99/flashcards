@@ -23,23 +23,21 @@ public class FlashcardsApplication {
         SpringApplication.run(FlashcardsApplication.class, args);
     }
 
-    @Autowired
-    private CustomPasswordEncoder passwordEncoder;
-    @Bean
-    public CommandLineRunner fillUserDB(UserRepository userRepository, FlashcardRepository flashcardRepository, SetRepository setRepository){
-        return args -> {
-
-            Flashcard flashcard = new Flashcard("front","back");
-            flashcardRepository.save(flashcard);
-            FlashcardSet set = new FlashcardSet("set1");
-            set.getFlashcards().add(flashcard);
-            setRepository.save(set);
-            User user = new User("user1",passwordEncoder.getPasswordEncoder().encode("haslo1"));
-            user.getSets().add(set);
-            userRepository.save(user);
-
-
-
-        };
-    }
+//    @Autowired
+//    private CustomPasswordEncoder passwordEncoder;
+//    @Bean
+//    public CommandLineRunner fillUserDB(UserRepository userRepository, FlashcardRepository flashcardRepository, SetRepository setRepository){
+//        return args -> {
+//
+//            Flashcard flashcard = new Flashcard("front","back");
+//            FlashcardSet set = new FlashcardSet("set1");
+//            User user = new User("user1",passwordEncoder.getPasswordEncoder().encode("haslo1"));
+//            flashcardRepository.save(flashcard);
+//            set.getFlashcards().add(flashcard);
+//            setRepository.save(set);
+//            user.getSets().add(set);
+//            userRepository.save(user);
+//
+//        };
+//    }
 }

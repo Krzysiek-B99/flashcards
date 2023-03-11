@@ -17,21 +17,23 @@ import java.util.*;
 public class User implements UserDetails {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "id", nullable = false, columnDefinition = "UUID default gen_random_uuid()")
-    private UUID id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
     private String username;
     private String password;
 
-    @OneToMany
+    @OneToMany(orphanRemoval = true, cascade = CascadeType.PERSIST,mappedBy = "user")
     private Set<FlashcardSet> sets = new HashSet<>();
 
     public User(String username, String password) {
         this.username = username;
         this.password = password;
     }
-
+    public void addSet(FlashcardSet set) {
+        this.sets.add(set);
+        set.setUser(this);
+    }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
