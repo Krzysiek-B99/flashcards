@@ -9,6 +9,4 @@ import java.util.Optional;
 
 public interface SetRepository extends JpaRepository<FlashcardSet, Long> {
 
-
-    public Optional<FlashcardSet> findByName(String name);
 }

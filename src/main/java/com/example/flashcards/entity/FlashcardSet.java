@@ -24,6 +24,9 @@ public class FlashcardSet {
 
     private String name;
 
+    //true = set private (everybody can read it)     |     false = set private  (nobody can read it)
+    private boolean privacy;
+
     @OneToMany
     private Set<Flashcard> flashcards = new HashSet<>();
 
@@ -31,7 +34,9 @@ public class FlashcardSet {
     @JsonIgnore
     private User user;
 
-    public FlashcardSet(String name) {
+    public FlashcardSet(String name, boolean privacy) {
         this.name = name;
+        this.privacy = privacy;
     }
+
 }

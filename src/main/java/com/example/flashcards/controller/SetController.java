@@ -1,15 +1,17 @@
 package com.example.flashcards.controller;
 
 import com.example.flashcards.entity.FlashcardSet;
+import com.example.flashcards.entity.User;
 import com.example.flashcards.service.SetService;
-import com.example.flashcards.service.UserService;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PostFilter;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
+import java.util.Objects;
 
 @RestController
+@RequestMapping("/sets")
 public class SetController {
 
     private final SetService setService;
@@ -18,20 +20,29 @@ public class SetController {
         this.setService = setService;
     }
 
-    @PostMapping("/sets")
+    @PostMapping("")
     public ResponseEntity<?> addSet(@RequestBody FlashcardSet set, Principal principal){
         setService.addSet(principal.getName(),set);
         return ResponseEntity.ok(set);
     }
 
-    @GetMapping("/sets")
-    public ResponseEntity<?> getSets(Principal principal){
+    @GetMapping("")
+    public ResponseEntity<?> getAllSets(Principal principal){
         return ResponseEntity.ok(setService.getSets(principal.getName()));
     }
 
-    @DeleteMapping("/{name}")
-    public ResponseEntity<?> deleteSet(@PathVariable String name, Principal principal){
+    @GetMapping("/{id}")
+    public ResponseEntity<?> getSetByName(@PathVariable Long id, Principal principal){
+        FlashcardSet set = setService.getSetById(id);
+        User user = setService.getUserByUsername(principal.getName());
+        return (!Objects.equals(user.getId(), set.getUser().getId()) && set.isPrivacy()) ? ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("this set is private") : ResponseEntity.ok(set);
+    }
 
-        return ResponseEntity.ok(setService.deleteSet(name,principal.getName()));
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> deleteSet(@PathVariable Long id, Principal principal){
+        if(setService.deleteSet(id, principal.getName())){
+            return ResponseEntity.ok("deleted");
+        }
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("this set doesnt belong to you");
     }
 }

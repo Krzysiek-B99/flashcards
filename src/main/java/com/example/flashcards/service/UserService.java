@@ -18,12 +18,10 @@ public class UserService implements UserDetailsService {
 
     private final UserRepository userRepository;
     private final CustomPasswordEncoder passwordEncoder;
-    private final SetRepository setRepository;
 
     public UserService(UserRepository userRepository, CustomPasswordEncoder passwordEncoder, SetRepository setRepository) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
-        this.setRepository = setRepository;
     }
 
     public User register(RegisterUser registerUser){

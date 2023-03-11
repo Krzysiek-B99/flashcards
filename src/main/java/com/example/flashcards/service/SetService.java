@@ -1,5 +1,6 @@
 package com.example.flashcards.service;
 
+import com.example.flashcards.config.RestAuthenticationFailureHandler;
 import com.example.flashcards.entity.FlashcardSet;
 import com.example.flashcards.entity.User;
 import com.example.flashcards.repository.SetRepository;
@@ -7,6 +8,7 @@ import com.example.flashcards.repository.UserRepository;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import java.nio.file.AccessDeniedException;
 import java.util.Objects;
 import java.util.Set;
 
@@ -16,9 +18,11 @@ public class SetService {
     private final SetRepository setRepository;
     private final UserRepository userRepository;
 
+
     public SetService(SetRepository setRepository, UserRepository userRepository) {
         this.setRepository = setRepository;
         this.userRepository = userRepository;
+
     }
 
     public void addSet(String username, FlashcardSet set){
@@ -36,16 +40,28 @@ public class SetService {
         return user.getSets();
     }
 
-    public String deleteSet(String setName, String username){
+    public FlashcardSet getSetById(Long setId){
+        return setRepository.findById(setId)
+                 .orElseThrow(() -> new UsernameNotFoundException("no such set in database"));
+    }
+
+    public User getUserByUsername(String username){
+        return userRepository.findByUsername(username)
+                .orElseThrow(()->new UsernameNotFoundException(""));
+    }
+
+    public boolean deleteSet(Long setId, String username){
         User user = userRepository.findByUsername(username)
                 .orElseThrow(()->new UsernameNotFoundException(""));
-        FlashcardSet set = setRepository.findByName(setName)
+        FlashcardSet set = setRepository.findById(setId)
                 .orElseThrow(()->new UsernameNotFoundException(""));
         if(!Objects.equals(user.getId(), set.getUser().getId())) {
-            return "not authorized";
+            return false;
         }
         setRepository.delete(set);
-        return "deleted";
+        return true;
 
     }
+
+
 }
