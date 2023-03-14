@@ -1,5 +1,6 @@
 package com.example.flashcards.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -26,10 +27,15 @@ public class User implements UserDetails {
     @OneToMany(orphanRemoval = true, cascade = CascadeType.PERSIST,mappedBy = "user")
     private Set<FlashcardSet> sets = new HashSet<>();
 
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "user")
+    @JsonIgnore
+    private List<Authority> authorities = new ArrayList<>();
+
     public User(String username, String password) {
         this.username = username;
         this.password = password;
     }
+
     public void addSet(FlashcardSet set) {
         this.sets.add(set);
         set.setUser(this);

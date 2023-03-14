@@ -1,6 +1,5 @@
 package com.example.flashcards.service;
 
-import com.example.flashcards.config.RestAuthenticationFailureHandler;
 import com.example.flashcards.entity.FlashcardSet;
 import com.example.flashcards.entity.User;
 import com.example.flashcards.repository.SetRepository;
@@ -8,7 +7,6 @@ import com.example.flashcards.repository.UserRepository;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import java.nio.file.AccessDeniedException;
 import java.util.Objects;
 import java.util.Set;
 
