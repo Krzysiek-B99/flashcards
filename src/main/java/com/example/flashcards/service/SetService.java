@@ -4,6 +4,7 @@ import com.example.flashcards.entity.FlashcardSet;
 import com.example.flashcards.entity.User;
 import com.example.flashcards.repository.SetRepository;
 import com.example.flashcards.repository.UserRepository;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
@@ -38,14 +39,9 @@ public class SetService {
         return user.getSets();
     }
 
-    public FlashcardSet getSetById(Long setId){
-        return setRepository.findById(setId)
+    public FlashcardSet getSetById(Long id){
+        return setRepository.findById(id)
                  .orElseThrow(() -> new UsernameNotFoundException("no such set in database"));
-    }
-
-    public User getUserByUsername(String username){
-        return userRepository.findByUsername(username)
-                .orElseThrow(()->new UsernameNotFoundException(""));
     }
 
     public boolean deleteSet(Long setId, String username){

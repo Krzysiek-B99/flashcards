@@ -5,6 +5,8 @@ import com.example.flashcards.entity.User;
 import com.example.flashcards.service.SetService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
@@ -32,9 +34,8 @@ public class SetController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<?> getSetByName(@PathVariable Long id, Principal principal){
+    public ResponseEntity<?> getSetById(@PathVariable Long id, @AuthenticationPrincipal User user){
         FlashcardSet set = setService.getSetById(id);
-        User user = setService.getUserByUsername(principal.getName());
         return (!Objects.equals(user.getId(), set.getUser().getId()) && set.isPrivacy()) ? ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("this set is private") : ResponseEntity.ok(set);
     }
 
@@ -43,6 +44,6 @@ public class SetController {
         if(setService.deleteSet(id, principal.getName())){
             return ResponseEntity.ok("deleted");
         }
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("this set doesnt belong to you");
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
     }
 }
