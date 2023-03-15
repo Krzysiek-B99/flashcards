@@ -48,4 +48,25 @@ public class FlashcardService {
         setRepository.save(set);
         return true;
     }
+    public Flashcard changeFlashcardsLevelBasedOnAnswer(Long id, boolean answer){
+        Flashcard flashcard = flashcardRepository.findById(id).orElseThrow(()->new UsernameNotFoundException(""));
+        if(answer){
+           if(flashcard.getLevel()<5) {
+               flashcard.setLevel(flashcard.getLevel() + 1);
+           }
+            switch (flashcard.getLevel()) {
+                case 2 -> flashcard.setRepeatTime(LocalDateTime.now().plusDays(2));
+                case 3 -> flashcard.setRepeatTime(LocalDateTime.now().plusDays(4));
+                case 4 -> flashcard.setRepeatTime(LocalDateTime.now().plusDays(7));
+                case 5 -> flashcard.setRepeatTime(LocalDateTime.now().plusDays(14));
+            }
+           flashcardRepository.save(flashcard);
+           return flashcard;
+        }
+            flashcard.setLevel(1);
+            flashcard.setRepeatTime(LocalDateTime.now().plusDays(1));
+            flashcardRepository.save(flashcard);
+            return flashcard;
+
+    }
 }

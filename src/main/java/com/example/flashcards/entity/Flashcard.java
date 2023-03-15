@@ -27,6 +27,7 @@ public class Flashcard {
 
     @Max(value = 5)
     @Min(value = 1)
+    //lvl1 = repeat every day  |  lvl2 = repeat after 2 days  |  lvl3 = repeat after 4 days  |  lvl4 = repeat after week  |  lvl5 = repeat after 2 weeks
     private int level;
 
     private LocalDateTime repeatTime;
