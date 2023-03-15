@@ -1,5 +1,6 @@
 package com.example.flashcards.service;
 
+import com.example.flashcards.entity.Flashcard;
 import com.example.flashcards.entity.FlashcardSet;
 import com.example.flashcards.entity.User;
 import com.example.flashcards.repository.SetRepository;
@@ -8,6 +9,8 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
@@ -44,17 +47,22 @@ public class SetService {
                  .orElseThrow(() -> new UsernameNotFoundException("no such set in database"));
     }
 
-    public boolean deleteSet(Long setId, String username){
+    public boolean deleteSet(Long id, String username){
         User user = userRepository.findByUsername(username)
                 .orElseThrow(()->new UsernameNotFoundException(""));
-        FlashcardSet set = setRepository.findById(setId)
+        FlashcardSet set = setRepository.findById(id)
                 .orElseThrow(()->new UsernameNotFoundException(""));
         if(!Objects.equals(user.getId(), set.getUser().getId())) {
             return false;
         }
         setRepository.delete(set);
         return true;
+    }
 
+    public List<Flashcard> getFlashcardsToRepeat(Long id){
+        FlashcardSet set = setRepository.findById(id)
+                .orElseThrow(()->new UsernameNotFoundException(""));
+        return set.getFlashcards().stream().filter(flashcard -> flashcard.getRepeatTime().isBefore(LocalDateTime.now())).toList();
     }
 
 

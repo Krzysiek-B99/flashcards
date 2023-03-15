@@ -29,7 +29,6 @@ public class Flashcard {
     @Min(value = 1)
     private int level;
 
-    //@Temporal(TemporalType.TIMESTAMP)
     private LocalDateTime repeatTime;
 
     public Flashcard(String front, String back) {
