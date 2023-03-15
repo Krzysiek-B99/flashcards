@@ -16,16 +16,20 @@ public class FlashcardsApplication {
         SpringApplication.run(FlashcardsApplication.class, args);
     }
 
-//    @Autowired
-//    private CustomPasswordEncoder passwordEncoder;
-//    @Bean
-//    public CommandLineRunner fillUserDB(UserRepository userRepository){
-//        return args -> {
-//            User user = new User();
-//            user.setUsername("user1");
-//            user.setPassword(passwordEncoder.getPasswordEncoder().encode("haslo1"));
-//            userRepository.save(user);
-//
-//        };
-//    }
+    @Autowired
+    private CustomPasswordEncoder passwordEncoder;
+    @Bean
+    public CommandLineRunner fillUserDB(UserRepository userRepository){
+        return args -> {
+            User user = new User();
+            user.setUsername("user1");
+            user.setPassword(passwordEncoder.getPasswordEncoder().encode("haslo1"));
+            userRepository.save(user);
+            User user2 = new User();
+            user2.setUsername("user2");
+            user2.setPassword(passwordEncoder.getPasswordEncoder().encode("haslo2"));
+            userRepository.save(user2);
+
+        };
+    }
 }

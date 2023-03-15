@@ -55,7 +55,7 @@ public class UserController {
                             HttpHeaders.AUTHORIZATION,
                             jwtUtil.generateToken(user)
                     )
-                    .body(user);
+                    .body(user.getUsername());
         } catch (BadCredentialsException ex){
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }

@@ -10,6 +10,9 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
@@ -37,6 +40,8 @@ public class FlashcardService {
             return false;
         }
         for(Flashcard flashcard : flashcards) {
+            flashcard.setLevel(1);
+            flashcard.setRepeatTime(LocalDateTime.now());
             set.getFlashcards().add(flashcard);
             flashcardRepository.save(flashcard);
         }

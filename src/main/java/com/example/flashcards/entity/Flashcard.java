@@ -5,6 +5,10 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
+import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.UUID;
 
 @Entity
@@ -20,6 +24,13 @@ public class Flashcard {
     private String front;
 
     private String back;
+
+    @Max(value = 5)
+    @Min(value = 1)
+    private int level;
+
+    //@Temporal(TemporalType.TIMESTAMP)
+    private LocalDateTime repeatTime;
 
     public Flashcard(String front, String back) {
         this.front = front;

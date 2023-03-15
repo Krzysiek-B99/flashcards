@@ -22,14 +22,14 @@ import java.util.List;
 @Component
 public class JwtFilter extends OncePerRequestFilter {
 
-    @Autowired
+
     private UserRepository userRepo;
-
-//    @Autowired
-//    private UserDetailsServiceImpl userDetailsService;
-
-    @Autowired
     private JwtUtil jwtUtil;
+
+    public JwtFilter(UserRepository userRepo, JwtUtil jwtUtil) {
+        this.userRepo = userRepo;
+        this.jwtUtil = jwtUtil;
+    }
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
