@@ -12,7 +12,6 @@ import java.util.*;
 
 @Entity
 @Table(name = "users")
-@NoArgsConstructor
 @Getter
 @Setter
 public class User implements UserDetails {
@@ -30,11 +29,6 @@ public class User implements UserDetails {
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "user")
     @JsonIgnore
     private List<Authority> authorities = new ArrayList<>();
-
-    public User(String username, String password) {
-        this.username = username;
-        this.password = password;
-    }
 
     public void addSet(FlashcardSet set) {
         this.sets.add(set);

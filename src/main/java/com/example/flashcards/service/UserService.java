@@ -1,8 +1,8 @@
 package com.example.flashcards.service;
 
-import com.example.flashcards.entity.FlashcardSet;
-import com.example.flashcards.entity.RegisterUser;
+import com.example.flashcards.dto.UserPostDto;
 import com.example.flashcards.entity.User;
+import com.example.flashcards.mapper.MapStructMapper;
 import com.example.flashcards.repository.SetRepository;
 import com.example.flashcards.repository.UserRepository;
 import com.example.flashcards.util.CustomPasswordEncoder;
@@ -11,23 +11,22 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import java.util.Set;
-
 @Service
 public class UserService implements UserDetailsService {
 
+    private final MapStructMapper mapStructMapper;
     private final UserRepository userRepository;
     private final CustomPasswordEncoder passwordEncoder;
 
-    public UserService(UserRepository userRepository, CustomPasswordEncoder passwordEncoder, SetRepository setRepository) {
+    public UserService(UserRepository userRepository, CustomPasswordEncoder passwordEncoder, SetRepository setRepository, MapStructMapper mapStructMapper) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
+        this.mapStructMapper = mapStructMapper;
     }
 
-    public User register(RegisterUser registerUser){
-        User user = new User(registerUser.getUsername(),passwordEncoder.getPasswordEncoder().encode(registerUser.getPassword()));
-        userRepository.save(user);
-        return user;
+    public void register(UserPostDto userPostDto){
+        userPostDto.setPassword(passwordEncoder.getPasswordEncoder().encode(userPostDto.getPassword()));
+        userRepository.save(mapStructMapper.userPostDtoToUser(userPostDto));
     }
 
     public boolean ifUserExist(String username){

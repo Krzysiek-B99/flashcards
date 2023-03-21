@@ -1,7 +1,7 @@
 package com.example.flashcards.controller;
 
 import com.example.flashcards.config.LoginCredentials;
-import com.example.flashcards.entity.RegisterUser;
+import com.example.flashcards.dto.UserPostDto;
 import com.example.flashcards.entity.User;
 import com.example.flashcards.service.UserService;
 import com.example.flashcards.util.JwtUtil;
@@ -14,8 +14,6 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
-
-import java.security.Principal;
 
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 @RestController
@@ -33,10 +31,12 @@ public class UserController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<?> register(@RequestBody RegisterUser registerUser){
-        if(!registerUser.getPassword().equals(registerUser.getRepeatPassword()))
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Passwords do not match");
-        return userService.ifUserExist(registerUser.getUsername()) ?  ResponseEntity.status(HttpStatus.BAD_REQUEST).body("User already exist") : ResponseEntity.ok(userService.register(registerUser));
+    public ResponseEntity<?> register(@RequestBody UserPostDto userPostDto){
+        if(userService.ifUserExist(userPostDto.getUsername())){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("User already exist");
+        }
+        userService.register(userPostDto);
+        return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
     @PostMapping("/login")
