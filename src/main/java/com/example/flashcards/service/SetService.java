@@ -1,15 +1,17 @@
 package com.example.flashcards.service;
 
+import com.example.flashcards.dto.SetSlimDto;
 import com.example.flashcards.entity.Flashcard;
 import com.example.flashcards.entity.FlashcardSet;
 import com.example.flashcards.entity.User;
+import com.example.flashcards.mapper.MapStructMapper;
 import com.example.flashcards.repository.SetRepository;
 import com.example.flashcards.repository.UserRepository;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
@@ -20,11 +22,14 @@ public class SetService {
     private final SetRepository setRepository;
     private final UserRepository userRepository;
 
+    private final MapStructMapper mapStructMapper;
 
-    public SetService(SetRepository setRepository, UserRepository userRepository) {
+
+    public SetService(SetRepository setRepository, UserRepository userRepository, MapStructMapper mapStructMapper) {
         this.setRepository = setRepository;
         this.userRepository = userRepository;
 
+        this.mapStructMapper = mapStructMapper;
     }
 
     public void addSet(String username, FlashcardSet set){
@@ -36,10 +41,10 @@ public class SetService {
         userRepository.save(user);
     }
 
-    public Set<FlashcardSet> getSets(String username) {
+    public Set<SetSlimDto> getSets(String username) {
         User user = userRepository.findByUsername(username)
                 .orElseThrow(()->new UsernameNotFoundException("login error"));
-        return user.getSets();
+        return mapStructMapper.flashcardSetToSetSlimDto(user.getSets());
     }
 
     public FlashcardSet getSetById(Long id){

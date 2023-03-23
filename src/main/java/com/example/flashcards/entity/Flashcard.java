@@ -32,8 +32,4 @@ public class Flashcard {
 
     private LocalDateTime repeatTime;
 
-    public Flashcard(String front, String back) {
-        this.front = front;
-        this.back = back;
-    }
 }

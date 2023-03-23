@@ -8,7 +8,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import java.net.URI;
 import java.security.Principal;
 import java.util.Objects;
 
@@ -23,14 +25,18 @@ public class SetController {
     }
 
     @PostMapping("")
-    public ResponseEntity<?> addSet(@RequestBody FlashcardSet set, Principal principal){
-        setService.addSet(principal.getName(),set);
-        return ResponseEntity.ok(set);
+    public ResponseEntity<?> addSet(@RequestBody FlashcardSet set, @AuthenticationPrincipal User user){
+        setService.addSet(user.getUsername(), set);
+        URI location = ServletUriComponentsBuilder
+                .fromCurrentRequest()
+                .path("/{id}")
+                .buildAndExpand(set.getId()).toUri();
+        return ResponseEntity.created(location).build();
     }
 
     @GetMapping("")
-    public ResponseEntity<?> getAllSets(Principal principal){
-        return ResponseEntity.ok(setService.getSets(principal.getName()));
+    public ResponseEntity<?> getAllSets(@AuthenticationPrincipal(expression = "username") String username){
+        return ResponseEntity.ok(setService.getSets(username));
     }
 
     @GetMapping("/{id}")
@@ -40,8 +46,8 @@ public class SetController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> deleteSet(@PathVariable Long id, Principal principal){
-        if(setService.deleteSet(id, principal.getName())){
+    public ResponseEntity<?> deleteSet(@PathVariable Long id, @AuthenticationPrincipal User user){
+        if(setService.deleteSet(id, user.getUsername())){
             return ResponseEntity.ok("deleted");
         }
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
