@@ -40,6 +40,7 @@ public class SetController {
     }
 
     @GetMapping("/{id}")
+    @PreAuthorize("authentication.principal.id.equals(@userService.getUserIdBySetId(#id)) or !(@setService.getSetById(#id).privacy)")
     public ResponseEntity<?> getSetById(@PathVariable Long id, @AuthenticationPrincipal User user){
         FlashcardSet set = setService.getSetById(id);
         return (!Objects.equals(user.getId(), set.getUser().getId()) && set.isPrivacy()) ? ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("this set is private") : ResponseEntity.ok(set);

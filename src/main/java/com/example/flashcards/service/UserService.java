@@ -1,7 +1,6 @@
 package com.example.flashcards.service;
 
 import com.example.flashcards.dto.UserPostDto;
-import com.example.flashcards.entity.User;
 import com.example.flashcards.mapper.MapStructMapper;
 import com.example.flashcards.repository.SetRepository;
 import com.example.flashcards.repository.UserRepository;
@@ -18,10 +17,13 @@ public class UserService implements UserDetailsService {
     private final UserRepository userRepository;
     private final CustomPasswordEncoder passwordEncoder;
 
-    public UserService(UserRepository userRepository, CustomPasswordEncoder passwordEncoder, SetRepository setRepository, MapStructMapper mapStructMapper) {
+    private final SetRepository setRepository;
+
+    public UserService(UserRepository userRepository, CustomPasswordEncoder passwordEncoder, SetRepository setRepository, MapStructMapper mapStructMapper, SetRepository setRepository1) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.mapStructMapper = mapStructMapper;
+        this.setRepository = setRepository1;
     }
 
     public void register(UserPostDto userPostDto){
@@ -37,6 +39,9 @@ public class UserService implements UserDetailsService {
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         return userRepository.findByUsername(username)
                 .orElseThrow(()->new UsernameNotFoundException(""));
+    }
+    public Long getUserIdBySetId(Long setId){
+        return setRepository.findById(setId).orElseThrow(()->new UsernameNotFoundException("")).getUser().getId();
     }
 
 }

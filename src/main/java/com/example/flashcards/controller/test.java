@@ -1,6 +1,7 @@
 package com.example.flashcards.controller;
 
 import com.example.flashcards.entity.User;
+import com.example.flashcards.service.UserService;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,8 +14,8 @@ import org.springframework.web.bind.annotation.RestController;
 public class test {
 
     @GetMapping("/{id}")
-    //   @PreAuthorize("authentication.principal.id.equals(#id)")
-    @PreAuthorize("authentication.principal.username.equals(flashcardRepository)")
+    @PreAuthorize("authentication.principal.id.equals(@userService.getUserIdBySetId(#id)) or !(@setService.getSetById(#id).privacy)")
+
     public String getSet(@AuthenticationPrincipal User user, @PathVariable Long id){
         return "test";
     }
