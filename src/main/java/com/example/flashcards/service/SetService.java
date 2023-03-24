@@ -4,6 +4,7 @@ import com.example.flashcards.dto.SetSlimDto;
 import com.example.flashcards.entity.Flashcard;
 import com.example.flashcards.entity.FlashcardSet;
 import com.example.flashcards.entity.User;
+import com.example.flashcards.exception.SetNotFoundException;
 import com.example.flashcards.mapper.MapStructMapper;
 import com.example.flashcards.repository.SetRepository;
 import com.example.flashcards.repository.UserRepository;
@@ -49,7 +50,7 @@ public class SetService {
 
     public FlashcardSet getSetById(Long id){
         return setRepository.findById(id)
-                 .orElseThrow(() -> new UsernameNotFoundException("no such set in database"));
+                 .orElseThrow(SetNotFoundException::new);
     }
 
     public void deleteSet(Long id){

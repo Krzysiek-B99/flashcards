@@ -1,6 +1,7 @@
 package com.example.flashcards.service;
 
 import com.example.flashcards.dto.UserPostDto;
+import com.example.flashcards.exception.SetNotFoundException;
 import com.example.flashcards.mapper.MapStructMapper;
 import com.example.flashcards.repository.SetRepository;
 import com.example.flashcards.repository.UserRepository;
@@ -41,7 +42,7 @@ public class UserService implements UserDetailsService {
                 .orElseThrow(()->new UsernameNotFoundException(""));
     }
     public Long getUserIdBySetId(Long setId){
-        return setRepository.findById(setId).orElseThrow(()->new UsernameNotFoundException("")).getUser().getId();
+        return setRepository.findById(setId).orElseThrow(SetNotFoundException::new).getUser().getId();
     }
 
 }
