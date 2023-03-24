@@ -52,16 +52,10 @@ public class SetService {
                  .orElseThrow(() -> new UsernameNotFoundException("no such set in database"));
     }
 
-    public boolean deleteSet(Long id, String username){
-        User user = userRepository.findByUsername(username)
-                .orElseThrow(()->new UsernameNotFoundException(""));
+    public void deleteSet(Long id){
         FlashcardSet set = setRepository.findById(id)
                 .orElseThrow(()->new UsernameNotFoundException(""));
-        if(!Objects.equals(user.getId(), set.getUser().getId())) {
-            return false;
-        }
         setRepository.delete(set);
-        return true;
     }
 
     public List<Flashcard> getFlashcardsToRepeat(Long id){

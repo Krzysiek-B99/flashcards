@@ -31,14 +31,9 @@ public class FlashcardService {
         this.flashcardRepository = flashcardRepository;
     }
 
-    public boolean addFlashcardsToSet(Long setId, List<Flashcard> flashcards, String username){
-        User user = userRepository.findByUsername(username)
-                .orElseThrow(()->new UsernameNotFoundException(""));
+    public void addFlashcardsToSet(Long setId, List<Flashcard> flashcards){
         FlashcardSet set = setRepository.findById(setId)
                 .orElseThrow(()->new UsernameNotFoundException("no such set in database"));
-        if(!Objects.equals(user.getId(), set.getUser().getId())) {
-            return false;
-        }
         for(Flashcard flashcard : flashcards) {
             flashcard.setLevel(1);
             flashcard.setRepeatTime(LocalDateTime.now());
@@ -46,7 +41,6 @@ public class FlashcardService {
             flashcardRepository.save(flashcard);
         }
         setRepository.save(set);
-        return true;
     }
     public Flashcard changeFlashcardsLevelBasedOnAnswer(Long id, boolean answer){
         Flashcard flashcard = flashcardRepository.findById(id).orElseThrow(()->new UsernameNotFoundException(""));

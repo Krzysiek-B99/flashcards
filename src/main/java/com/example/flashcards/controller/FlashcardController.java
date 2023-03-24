@@ -6,6 +6,7 @@ import com.example.flashcards.entity.User;
 import com.example.flashcards.service.FlashcardService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,10 +25,10 @@ public class FlashcardController {
     }
 
     @PostMapping("/{id}/flashcards")
-    public ResponseEntity<?> addFlashardsToSet (@PathVariable Long id, @RequestBody List<Flashcard> flashcards, @AuthenticationPrincipal User user){
-        if(flashcardService.addFlashcardsToSet(id, flashcards, user.getUsername())){
-            return ResponseEntity.ok(flashcards);
-        }
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("this set doesnt belong to you");
+    @PreAuthorize("authentication.principal.id.equals(@userService.getUserIdBySetId(#id))")
+    public ResponseEntity<?> addFlashardsToSet (@PathVariable Long id, @RequestBody List<Flashcard> flashcards){
+        flashcardService.addFlashcardsToSet(id, flashcards);
+        return ResponseEntity.ok(flashcards);
+
     }
 }

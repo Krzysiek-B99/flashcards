@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
@@ -41,16 +42,14 @@ public class SetController {
 
     @GetMapping("/{id}")
     @PreAuthorize("authentication.principal.id.equals(@userService.getUserIdBySetId(#id)) or !(@setService.getSetById(#id).privacy)")
-    public ResponseEntity<?> getSetById(@PathVariable Long id, @AuthenticationPrincipal User user){
-        FlashcardSet set = setService.getSetById(id);
-        return (!Objects.equals(user.getId(), set.getUser().getId()) && set.isPrivacy()) ? ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("this set is private") : ResponseEntity.ok(set);
+    public ResponseEntity<?> getSetById(@PathVariable Long id){
+        return ResponseEntity.ok(setService.getSetById(id));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> deleteSet(@PathVariable Long id, @AuthenticationPrincipal User user){
-        if(setService.deleteSet(id, user.getUsername())){
-            return ResponseEntity.ok("deleted");
-        }
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+    @PreAuthorize("authentication.principal.id.equals(@userService.getUserIdBySetId(#id))")
+    public ResponseEntity<?> deleteSet(@PathVariable Long id){
+            setService.deleteSet(id);
+            return ResponseEntity.ok().build();
     }
 }
