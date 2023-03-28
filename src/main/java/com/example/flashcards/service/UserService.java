@@ -17,10 +17,9 @@ public class UserService implements UserDetailsService {
     private final MapStructMapper mapStructMapper;
     private final UserRepository userRepository;
     private final CustomPasswordEncoder passwordEncoder;
-
     private final SetRepository setRepository;
 
-    public UserService(UserRepository userRepository, CustomPasswordEncoder passwordEncoder, SetRepository setRepository, MapStructMapper mapStructMapper, SetRepository setRepository1) {
+    public UserService(UserRepository userRepository, CustomPasswordEncoder passwordEncoder, MapStructMapper mapStructMapper, SetRepository setRepository1) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.mapStructMapper = mapStructMapper;
@@ -39,7 +38,7 @@ public class UserService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         return userRepository.findByUsername(username)
-                .orElseThrow(()->new UsernameNotFoundException(""));
+                .orElseThrow(()->new UsernameNotFoundException("User not found"));
     }
     public Long getUserIdBySetId(Long setId){
         return setRepository.findById(setId).orElseThrow(SetNotFoundException::new).getUser().getId();

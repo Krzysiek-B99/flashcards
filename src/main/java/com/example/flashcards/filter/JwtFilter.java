@@ -2,7 +2,6 @@ package com.example.flashcards.filter;
 
 import com.example.flashcards.repository.UserRepository;
 import com.example.flashcards.util.JwtUtil;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -23,8 +22,8 @@ import java.util.List;
 public class JwtFilter extends OncePerRequestFilter {
 
 
-    private UserRepository userRepo;
-    private JwtUtil jwtUtil;
+    private final UserRepository userRepo;
+    private final JwtUtil jwtUtil;
 
     public JwtFilter(UserRepository userRepo, JwtUtil jwtUtil) {
         this.userRepo = userRepo;

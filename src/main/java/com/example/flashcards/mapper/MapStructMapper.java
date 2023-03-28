@@ -16,7 +16,7 @@ import java.util.Set;
 public interface MapStructMapper {
     User userPostDtoToUser(UserPostDto userPostDto);
 
-    UserGetDto userToUserGetDto(User user);
+    UserGetDto userPostDtoToUserGetDto(UserPostDto userPostDto);
 
     UserWithSetsDto userToUserWithSetsDto (User user);
 

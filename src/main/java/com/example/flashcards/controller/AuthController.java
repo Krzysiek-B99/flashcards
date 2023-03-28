@@ -39,7 +39,7 @@ public class AuthController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("User already exist");
         }
         userService.register(userPostDto);
-        return ResponseEntity.status(HttpStatus.CREATED).body("successfully registered");
+        return ResponseEntity.status(HttpStatus.CREATED).body(mapStructMapper.userPostDtoToUserGetDto(userPostDto));
     }
 
     @PostMapping("/login")
@@ -57,7 +57,7 @@ public class AuthController {
                             HttpHeaders.AUTHORIZATION,
                             jwtUtil.generateToken(user)
                     )
-                    .body(mapStructMapper.userToUserGetDto(user));
+                    .body(mapStructMapper.userToUserWithSetsDto(user));
         } catch (BadCredentialsException ex){
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("wrong username or password");
         }

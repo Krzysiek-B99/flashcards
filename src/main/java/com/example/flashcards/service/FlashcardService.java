@@ -2,38 +2,30 @@ package com.example.flashcards.service;
 
 import com.example.flashcards.entity.Flashcard;
 import com.example.flashcards.entity.FlashcardSet;
-import com.example.flashcards.entity.User;
+import com.example.flashcards.exception.SetNotFoundException;
 import com.example.flashcards.repository.FlashcardRepository;
 import com.example.flashcards.repository.SetRepository;
-import com.example.flashcards.repository.UserRepository;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestBody;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.Date;
 import java.util.List;
-import java.util.Objects;
-import java.util.Set;
 
 @Service
 public class FlashcardService {
 
-    private final UserRepository userRepository;
     private final SetRepository setRepository;
 
     private final FlashcardRepository flashcardRepository;
 
-    public FlashcardService(UserRepository userRepository, SetRepository setRepository, FlashcardRepository flashcardRepository) {
-        this.userRepository = userRepository;
+    public FlashcardService(SetRepository setRepository, FlashcardRepository flashcardRepository) {
         this.setRepository = setRepository;
         this.flashcardRepository = flashcardRepository;
     }
 
-    public void addFlashcardsToSet(Long setId, List<Flashcard> flashcards){
-        FlashcardSet set = setRepository.findById(setId)
-                .orElseThrow(()->new UsernameNotFoundException("no such set in database"));
+    public void addFlashcardsToSet(Long id, List<Flashcard> flashcards){
+        FlashcardSet set = setRepository.findById(id)
+                .orElseThrow(SetNotFoundException::new);
         for(Flashcard flashcard : flashcards) {
             flashcard.setLevel(1);
             flashcard.setRepeatTime(LocalDateTime.now());
@@ -43,7 +35,7 @@ public class FlashcardService {
         setRepository.save(set);
     }
     public Flashcard changeFlashcardsLevelBasedOnAnswer(Long id, boolean answer){
-        Flashcard flashcard = flashcardRepository.findById(id).orElseThrow(()->new UsernameNotFoundException(""));
+        Flashcard flashcard = flashcardRepository.findById(id).orElseThrow(()->new UsernameNotFoundException("User not found"));
         if(answer){
            if(flashcard.getLevel()<5) {
                flashcard.setLevel(flashcard.getLevel() + 1);

@@ -12,9 +12,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Objects;
 import java.util.Set;
 
 @Service
@@ -22,21 +20,19 @@ public class SetService {
 
     private final SetRepository setRepository;
     private final UserRepository userRepository;
-
     private final MapStructMapper mapStructMapper;
 
 
     public SetService(SetRepository setRepository, UserRepository userRepository, MapStructMapper mapStructMapper) {
         this.setRepository = setRepository;
         this.userRepository = userRepository;
-
         this.mapStructMapper = mapStructMapper;
     }
 
     public void addSet(String username, FlashcardSet set){
 
         User user = userRepository.findByUsername(username)
-                .orElseThrow(()->new UsernameNotFoundException("login error"));
+                .orElseThrow(()->new UsernameNotFoundException("User not found"));
         setRepository.save(set);
         user.addSet(set);
         userRepository.save(user);
@@ -44,7 +40,7 @@ public class SetService {
 
     public Set<SetSlimDto> getSets(String username) {
         User user = userRepository.findByUsername(username)
-                .orElseThrow(()->new UsernameNotFoundException("login error"));
+                .orElseThrow(()->new UsernameNotFoundException("User not found"));
         return mapStructMapper.flashcardSetToSetSlimDto(user.getSets());
     }
 
@@ -55,13 +51,13 @@ public class SetService {
 
     public void deleteSet(Long id){
         FlashcardSet set = setRepository.findById(id)
-                .orElseThrow(()->new UsernameNotFoundException(""));
+                .orElseThrow(SetNotFoundException::new);
         setRepository.delete(set);
     }
 
     public List<Flashcard> getFlashcardsToRepeat(Long id){
         FlashcardSet set = setRepository.findById(id)
-                .orElseThrow(()->new UsernameNotFoundException(""));
+                .orElseThrow(SetNotFoundException::new);
         return set.getFlashcards().stream().filter(flashcard -> flashcard.getRepeatTime().isBefore(LocalDateTime.now())).toList();
     }
 

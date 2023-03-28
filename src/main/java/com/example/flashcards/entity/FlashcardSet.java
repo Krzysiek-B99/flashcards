@@ -4,13 +4,10 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.hibernate.annotations.Type;
-import org.springframework.objenesis.instantiator.util.UnsafeUtils;
 
 import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.UUID;
 
 @Entity
 @Getter
@@ -33,10 +30,5 @@ public class FlashcardSet {
     @ManyToOne
     @JsonIgnore
     private User user;
-
-    public FlashcardSet(String name, boolean privacy) {
-        this.name = name;
-        this.privacy = privacy;
-    }
 
 }
