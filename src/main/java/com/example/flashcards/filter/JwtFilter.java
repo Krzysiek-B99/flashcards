@@ -42,19 +42,10 @@ public class JwtFilter extends OncePerRequestFilter {
         // Authorization -> ([Bearer], [asdf.138974sh.alsjkh234879.anhjksd3452.akjsd74])
         final String token = header.split(" ")[1].trim();
 
-        // Get user identity and set it on the spring security context
         UserDetails userDetails = userRepo
                 .findByUsername(jwtUtil.getUsernameFromToken(token))
                 .orElse(null);
 
-//        ========== CZY TO ZADZIAŁA TAK SAMO?  ============================
-//       UserDetails userDetails = userDetailsService
-//                .loadUserByUsername(jwtUtil.getUsernameFromToken(token));
-//        =================================================================
-
-
-
-        // Get jwt token and validate
         if (!jwtUtil.validateToken(token, userDetails)) {
             chain.doFilter(request, response);
             return;
@@ -62,7 +53,6 @@ public class JwtFilter extends OncePerRequestFilter {
 
         UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
                 userDetails, null, userDetails == null ? List.of() : userDetails.getAuthorities()
-                //=============Ternary Operator============== Warunek ? ifTrue : ifFalse
         );
 
         authentication.setDetails(

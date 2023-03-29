@@ -14,6 +14,8 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
+
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 @RestController
 public class AuthController {
@@ -34,7 +36,7 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<?> register(@RequestBody UserPostDto userPostDto){
+    public ResponseEntity<?> register(@RequestBody @Valid UserPostDto userPostDto){
         if(userService.ifUserExist(userPostDto.getUsername())){
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("User already exist");
         }

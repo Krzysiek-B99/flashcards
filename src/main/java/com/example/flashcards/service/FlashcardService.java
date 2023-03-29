@@ -55,4 +55,11 @@ public class FlashcardService {
             return flashcard;
 
     }
+    public void deleteFlashcardFromSet(Long id,Long flashcardId){
+        FlashcardSet set = setRepository.findById(id)
+                .orElseThrow(SetNotFoundException::new);
+        Flashcard flashcard = flashcardRepository.findById(flashcardId).orElseThrow(()->new UsernameNotFoundException("User not found"));
+        set.removeFlashcard(flashcard);
+        flashcardRepository.delete(flashcard);
+    }
 }

@@ -1,13 +1,14 @@
 package com.example.flashcards.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
-import java.util.*;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "users")
@@ -24,10 +25,6 @@ public class User implements UserDetails {
 
     @OneToMany(orphanRemoval = true, cascade = CascadeType.PERSIST,mappedBy = "user")
     private Set<FlashcardSet> sets = new HashSet<>();
-
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "user")
-    @JsonIgnore
-    private List<Authority> authorities = new ArrayList<>();
 
     public void addSet(FlashcardSet set) {
         this.sets.add(set);

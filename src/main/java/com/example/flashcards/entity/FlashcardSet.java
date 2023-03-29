@@ -24,11 +24,16 @@ public class FlashcardSet {
     //true = set private (everybody can read it)     |     false = set private  (nobody can read it)
     private boolean privacy;
 
-    @OneToMany
+    @OneToMany(cascade = CascadeType.ALL)
     private Set<Flashcard> flashcards = new HashSet<>();
 
     @ManyToOne
     @JsonIgnore
     private User user;
+
+    public FlashcardSet removeFlashcard(Flashcard flashcard){
+        flashcards.remove(flashcard);
+        return this;
+    }
 
 }

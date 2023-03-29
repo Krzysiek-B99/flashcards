@@ -20,9 +20,16 @@ public class FlashcardController {
 
     @PostMapping("/{id}/flashcards")
     @PreAuthorize("authentication.principal.id.equals(@userService.getUserIdBySetId(#id))")
-    public ResponseEntity<?> addFlashardsToSet (@PathVariable Long id, @RequestBody List<Flashcard> flashcards){
+    public ResponseEntity<?> addFlashcardsToSet(@PathVariable Long id, @RequestBody List<Flashcard> flashcards){
         flashcardService.addFlashcardsToSet(id, flashcards);
         return ResponseEntity.ok(flashcards);
+
+    }
+    @DeleteMapping("/{id}/flashcards/{flashcardId}")
+    @PreAuthorize("authentication.principal.id.equals(@userService.getUserIdBySetId(#id))")
+    public ResponseEntity<?> addFlashcardsToSet( @PathVariable Long id,@PathVariable Long flashcardId){
+        flashcardService.deleteFlashcardFromSet(id,flashcardId);
+        return ResponseEntity.ok().build();
 
     }
 }
