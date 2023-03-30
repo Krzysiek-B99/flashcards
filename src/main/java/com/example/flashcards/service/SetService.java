@@ -60,6 +60,12 @@ public class SetService {
                 .orElseThrow(SetNotFoundException::new);
         return set.getFlashcards().stream().filter(flashcard -> flashcard.getRepeatTime().isBefore(LocalDateTime.now())).toList();
     }
+    public void changeSetName(Long id,String name){
+        FlashcardSet set = setRepository.findById(id)
+                .orElseThrow(SetNotFoundException::new);
+        set.setName(name);
+        setRepository.save(set);
+    }
 
 
 }

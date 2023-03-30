@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import javax.validation.constraints.Size;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -19,6 +20,7 @@ public class FlashcardSet {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Size(max = 30,message = "max 30 signs")
     private String name;
 
     //true = set private (everybody can read it)     |     false = set private  (nobody can read it)
@@ -31,9 +33,8 @@ public class FlashcardSet {
     @JsonIgnore
     private User user;
 
-    public FlashcardSet removeFlashcard(Flashcard flashcard){
+    public void removeFlashcard(Flashcard flashcard){
         flashcards.remove(flashcard);
-        return this;
     }
 
 }
