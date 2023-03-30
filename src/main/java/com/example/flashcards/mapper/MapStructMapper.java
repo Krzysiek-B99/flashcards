@@ -20,6 +20,8 @@ public interface MapStructMapper {
 
     UserWithSetsDto userToUserWithSetsDto (User user);
 
-    Set<SetSlimDto> flashcardSetToSetSlimDto(Set<FlashcardSet> flashcardSets);
+    Set<SetSlimDto> flashcardSetsToSetsSlimDto(Set<FlashcardSet> flashcardSets);
+
+    SetSlimDto flashcardSetToSetSlimDto(FlashcardSet flashcardSet);
 
 }

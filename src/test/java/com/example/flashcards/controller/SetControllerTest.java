@@ -8,8 +8,9 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import javax.transaction.Transactional;
+
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -70,6 +71,17 @@ class SetControllerTest {
                         .header("Authorization","Bearer "+token))
                 .andDo(print())
                 .andExpect(status().is(403));
+
+        mockMvc.perform(delete("/sets/2")
+                        .header("Authorization","Bearer "+token))
+                .andDo(print())
+                .andExpect(status().is(403));
+
+        mockMvc.perform(put("/sets/2")
+                        .header("Authorization","Bearer "+token)
+                        .content("set3"))
+                .andDo(print())
+                .andExpect(status().is(403));
     }
     @Test
     void shouldGetPublicSet() throws Exception {
@@ -88,6 +100,42 @@ class SetControllerTest {
                 .andExpect(status().is(200))
                 .andExpect(content().string("{\"id\":2,\"name\":\"set2\",\"privacy\":false,\"flashcards\":[]}"));
 
+    }
+    @Test
+    @Transactional
+    void shouldGet200Status() throws Exception {
+        MvcResult login = mockMvc.perform(post("/login")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"username\":\"user1\",\"password\":\"haslo1\"}"))
+                .andDo(print())
+                .andExpect(status().is(200))
+                .andReturn();
+
+        String token = login.getResponse().getHeader("Authorization");
+
+        mockMvc.perform(delete("/sets/2")
+                        .header("Authorization","Bearer "+token))
+                .andDo(print())
+                .andExpect(status().is(200));
+    }
+    @Test
+    @Transactional
+    void shouldGet200StatusAndChangedSetName() throws Exception {
+        MvcResult login = mockMvc.perform(post("/login")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"username\":\"user1\",\"password\":\"haslo1\"}"))
+                .andDo(print())
+                .andExpect(status().is(200))
+                .andReturn();
+
+        String token = login.getResponse().getHeader("Authorization");
+
+        mockMvc.perform(put("/sets/2")
+                        .header("Authorization","Bearer "+token)
+                        .content("set3"))
+                .andDo(print())
+                .andExpect(status().is(200))
+                .andExpect(content().string("{\"id\":2,\"name\":\"set3\",\"privacy\":false}"));
     }
 
 }

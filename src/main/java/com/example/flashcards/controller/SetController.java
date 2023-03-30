@@ -45,8 +45,7 @@ public class SetController {
     @PutMapping("/{id}")
     @PreAuthorize("authentication.principal.id.equals(@userService.getUserIdBySetId(#id))")
     public ResponseEntity<?> changeSetName(@PathVariable Long id,@RequestBody String name){
-        setService.changeSetName(id,name);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok().body(setService.changeSetName(id,name));
     }
 
     @DeleteMapping("/{id}")

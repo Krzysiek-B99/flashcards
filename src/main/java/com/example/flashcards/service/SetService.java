@@ -41,7 +41,7 @@ public class SetService {
     public Set<SetSlimDto> getSets(String username) {
         User user = userRepository.findByUsername(username)
                 .orElseThrow(()->new UsernameNotFoundException("User not found"));
-        return mapStructMapper.flashcardSetToSetSlimDto(user.getSets());
+        return mapStructMapper.flashcardSetsToSetsSlimDto(user.getSets());
     }
 
     public FlashcardSet getSetById(Long id){
@@ -60,11 +60,12 @@ public class SetService {
                 .orElseThrow(SetNotFoundException::new);
         return set.getFlashcards().stream().filter(flashcard -> flashcard.getRepeatTime().isBefore(LocalDateTime.now())).toList();
     }
-    public void changeSetName(Long id,String name){
+    public SetSlimDto changeSetName(Long id,String name){
         FlashcardSet set = setRepository.findById(id)
                 .orElseThrow(SetNotFoundException::new);
         set.setName(name);
         setRepository.save(set);
+        return mapStructMapper.flashcardSetToSetSlimDto(set);
     }
 
 
