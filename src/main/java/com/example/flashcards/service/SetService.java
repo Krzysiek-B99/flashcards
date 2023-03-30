@@ -1,5 +1,6 @@
 package com.example.flashcards.service;
 
+import com.example.flashcards.dto.SetPutDto;
 import com.example.flashcards.dto.SetSlimDto;
 import com.example.flashcards.entity.Flashcard;
 import com.example.flashcards.entity.FlashcardSet;
@@ -11,6 +12,7 @@ import com.example.flashcards.repository.UserRepository;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import javax.validation.Valid;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
@@ -60,12 +62,14 @@ public class SetService {
                 .orElseThrow(SetNotFoundException::new);
         return set.getFlashcards().stream().filter(flashcard -> flashcard.getRepeatTime().isBefore(LocalDateTime.now())).toList();
     }
-    public SetSlimDto changeSetName(Long id,String name){
+    public SetSlimDto changeSetNameOrPrivacy(Long id,@Valid SetPutDto setPutDto){
         FlashcardSet set = setRepository.findById(id)
                 .orElseThrow(SetNotFoundException::new);
-        set.setName(name);
-        setRepository.save(set);
-        return mapStructMapper.flashcardSetToSetSlimDto(set);
+        set.setName(setPutDto.getName());
+        set.setPrivacy(setPutDto.isPrivacy());
+        setRepository.save( set);
+        return mapStructMapper.flashcardSetToSetSlimDto(setRepository.findById(id).orElseThrow(SetNotFoundException::new));
+
     }
 
 

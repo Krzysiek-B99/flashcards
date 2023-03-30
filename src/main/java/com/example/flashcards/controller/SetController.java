@@ -1,5 +1,7 @@
 package com.example.flashcards.controller;
 
+import com.example.flashcards.dto.SetPutDto;
+import com.example.flashcards.dto.SetSlimDto;
 import com.example.flashcards.entity.FlashcardSet;
 import com.example.flashcards.entity.User;
 import com.example.flashcards.service.SetService;
@@ -7,9 +9,12 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import javax.validation.Valid;
+import javax.validation.constraints.Size;
 import java.net.URI;
 
 @RestController
@@ -23,7 +28,7 @@ public class SetController {
     }
 
     @PostMapping("")
-    public ResponseEntity<?> addSet(@RequestBody FlashcardSet set, @AuthenticationPrincipal User user){
+    public ResponseEntity<?> addSet(@RequestBody FlashcardSet set, @AuthenticationPrincipal User user) {
         setService.addSet(user.getUsername(), set);
         URI location = ServletUriComponentsBuilder
                 .fromCurrentRequest()
@@ -44,8 +49,8 @@ public class SetController {
     }
     @PutMapping("/{id}")
     @PreAuthorize("authentication.principal.id.equals(@userService.getUserIdBySetId(#id))")
-    public ResponseEntity<?> changeSetName(@PathVariable Long id,@RequestBody String name){
-        return ResponseEntity.ok().body(setService.changeSetName(id,name));
+    public ResponseEntity<?> setModification(@PathVariable Long id,@RequestBody @Valid SetPutDto setPutDto) {
+        return ResponseEntity.ok().body(setService.changeSetNameOrPrivacy(id,setPutDto));
     }
 
     @DeleteMapping("/{id}")

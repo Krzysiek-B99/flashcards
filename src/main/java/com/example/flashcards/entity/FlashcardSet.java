@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.util.HashSet;
 import java.util.Set;
@@ -21,6 +22,7 @@ public class FlashcardSet {
     private Long id;
 
     @Size(max = 30,message = "max 30 signs")
+    @NotNull
     private String name;
 
     //true = set private (everybody can read it)     |     false = set private  (nobody can read it)

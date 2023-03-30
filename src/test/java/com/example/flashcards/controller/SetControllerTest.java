@@ -137,5 +137,25 @@ class SetControllerTest {
                 .andExpect(status().is(200))
                 .andExpect(content().string("{\"id\":2,\"name\":\"set3\",\"privacy\":false}"));
     }
+    @Test
+
+    void shouldGetErrorMax30Signs() throws Exception {
+        MvcResult login = mockMvc.perform(post("/login")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"username\":\"user1\",\"password\":\"haslo1\"}"))
+                .andDo(print())
+                .andExpect(status().is(200))
+                .andReturn();
+
+        String token = login.getResponse().getHeader("Authorization");
+
+        mockMvc.perform(put("/sets/2")
+                        .header("Authorization","Bearer "+token)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"name\":\"1111122222333334444455555666667\",\"privacy\":false}"))
+                .andDo(print())
+                .andExpect(status().is(400));
+
+    }
 
 }
