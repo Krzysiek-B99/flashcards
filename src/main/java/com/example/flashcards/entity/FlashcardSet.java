@@ -25,8 +25,8 @@ public class FlashcardSet {
     @NotNull
     private String name;
 
-    //true = set private (everybody can read it)     |     false = set private  (nobody can read it)
-    private boolean privacy;
+    //true = set private (nobody can read it)     |     false = set public  (everybody can read it)
+    private boolean isPrivate;
 
     @OneToMany(cascade = CascadeType.ALL)
     private Set<Flashcard> flashcards = new HashSet<>();

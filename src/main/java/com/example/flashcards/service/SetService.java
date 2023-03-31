@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import javax.validation.Valid;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 
 @Service
@@ -62,12 +63,12 @@ public class SetService {
                 .orElseThrow(SetNotFoundException::new);
         return set.getFlashcards().stream().filter(flashcard -> flashcard.getRepeatTime().isBefore(LocalDateTime.now())).toList();
     }
-    public SetSlimDto changeSetNameOrPrivacy(Long id,@Valid SetPutDto setPutDto){
+    public SetSlimDto changeSetNameAndPrivacy(Long id,@Valid SetPutDto setPutDto){
         FlashcardSet set = setRepository.findById(id)
                 .orElseThrow(SetNotFoundException::new);
         set.setName(setPutDto.getName());
-        set.setPrivacy(setPutDto.isPrivacy());
-        setRepository.save( set);
+        set.setPrivate(setPutDto.isPrivate());
+        setRepository.save(set);
         return mapStructMapper.flashcardSetToSetSlimDto(setRepository.findById(id).orElseThrow(SetNotFoundException::new));
 
     }

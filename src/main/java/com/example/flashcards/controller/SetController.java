@@ -43,14 +43,14 @@ public class SetController {
     }
 
     @GetMapping("/{id}")
-    @PreAuthorize("authentication.principal.id.equals(@userService.getUserIdBySetId(#id)) or !(@setService.getSetById(#id).privacy)")
+    @PreAuthorize("authentication.principal.id.equals(@userService.getUserIdBySetId(#id)) or !(@setService.getSetById(#id).isPrivate)")
     public ResponseEntity<?> getSetById(@PathVariable Long id){
         return ResponseEntity.ok(setService.getSetById(id));
     }
     @PutMapping("/{id}")
     @PreAuthorize("authentication.principal.id.equals(@userService.getUserIdBySetId(#id))")
     public ResponseEntity<?> editSet(@PathVariable Long id,@RequestBody @Valid SetPutDto setPutDto) {
-        return ResponseEntity.ok().body(setService.changeSetNameOrPrivacy(id,setPutDto));
+        return ResponseEntity.ok().body(setService.changeSetNameAndPrivacy(id,setPutDto));
     }
 
     @DeleteMapping("/{id}")
