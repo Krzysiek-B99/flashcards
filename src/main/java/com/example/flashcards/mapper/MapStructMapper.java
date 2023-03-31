@@ -1,9 +1,6 @@
 package com.example.flashcards.mapper;
 
-import com.example.flashcards.dto.SetSlimDto;
-import com.example.flashcards.dto.UserGetDto;
-import com.example.flashcards.dto.UserPostDto;
-import com.example.flashcards.dto.UserWithSetsDto;
+import com.example.flashcards.dto.*;
 import com.example.flashcards.entity.Flashcard;
 import com.example.flashcards.entity.FlashcardSet;
 import com.example.flashcards.entity.User;

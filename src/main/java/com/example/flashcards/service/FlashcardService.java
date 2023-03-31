@@ -1,8 +1,11 @@
 package com.example.flashcards.service;
 
+import com.example.flashcards.dto.FlashcardPutDto;
 import com.example.flashcards.entity.Flashcard;
 import com.example.flashcards.entity.FlashcardSet;
+import com.example.flashcards.exception.FlashcardNotFoundException;
 import com.example.flashcards.exception.SetNotFoundException;
+import com.example.flashcards.mapper.MapStructMapper;
 import com.example.flashcards.repository.FlashcardRepository;
 import com.example.flashcards.repository.SetRepository;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -18,9 +21,12 @@ public class FlashcardService {
 
     private final FlashcardRepository flashcardRepository;
 
-    public FlashcardService(SetRepository setRepository, FlashcardRepository flashcardRepository) {
+    private final MapStructMapper mapStructMapper;
+
+    public FlashcardService(SetRepository setRepository, FlashcardRepository flashcardRepository, MapStructMapper mapStructMapper) {
         this.setRepository = setRepository;
         this.flashcardRepository = flashcardRepository;
+        this.mapStructMapper = mapStructMapper;
     }
 
     public void addFlashcardsToSet(Long id, List<Flashcard> flashcards){
@@ -35,7 +41,7 @@ public class FlashcardService {
         setRepository.save(set);
     }
     public Flashcard changeFlashcardsLevelBasedOnAnswer(Long id, boolean answer){
-        Flashcard flashcard = flashcardRepository.findById(id).orElseThrow(()->new UsernameNotFoundException("User not found"));
+        Flashcard flashcard = flashcardRepository.findById(id).orElseThrow(FlashcardNotFoundException::new);
         if(answer){
            if(flashcard.getLevel()<5) {
                flashcard.setLevel(flashcard.getLevel() + 1);
@@ -61,5 +67,12 @@ public class FlashcardService {
         Flashcard flashcard = flashcardRepository.findById(flashcardId).orElseThrow(()->new UsernameNotFoundException("User not found"));
         set.removeFlashcard(flashcard);
         flashcardRepository.delete(flashcard);
+    }
+    public Flashcard changeFlashcardsFrontAndBack(FlashcardPutDto flashcardPutDto, Long id){
+        Flashcard flashcard = flashcardRepository.findById(id).orElseThrow(FlashcardNotFoundException::new);
+        flashcard.setFront(flashcardPutDto.getFront());
+        flashcard.setBack(flashcardPutDto.getBack());
+        flashcardRepository.save(flashcard);
+        return flashcardRepository.findById(id).orElseThrow(FlashcardNotFoundException::new);
     }
 }

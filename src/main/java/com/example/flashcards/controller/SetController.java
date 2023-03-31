@@ -49,7 +49,7 @@ public class SetController {
     }
     @PutMapping("/{id}")
     @PreAuthorize("authentication.principal.id.equals(@userService.getUserIdBySetId(#id))")
-    public ResponseEntity<?> setModification(@PathVariable Long id,@RequestBody @Valid SetPutDto setPutDto) {
+    public ResponseEntity<?> editSet(@PathVariable Long id,@RequestBody @Valid SetPutDto setPutDto) {
         return ResponseEntity.ok().body(setService.changeSetNameOrPrivacy(id,setPutDto));
     }
 
