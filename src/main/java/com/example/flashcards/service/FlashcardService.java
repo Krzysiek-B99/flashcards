@@ -15,7 +15,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
-public class FlashcardService {
+public class FlashcardService implements IFlashcardService {
 
     private final SetRepository setRepository;
 
@@ -29,6 +29,7 @@ public class FlashcardService {
         this.mapStructMapper = mapStructMapper;
     }
 
+    @Override
     public void addFlashcardsToSet(Long id, List<Flashcard> flashcards){
         FlashcardSet set = setRepository.findById(id)
                 .orElseThrow(SetNotFoundException::new);
@@ -40,6 +41,7 @@ public class FlashcardService {
         }
         setRepository.save(set);
     }
+    @Override
     public Flashcard changeFlashcardsLevelBasedOnAnswer(Long id, boolean answer){
         Flashcard flashcard = flashcardRepository.findById(id).orElseThrow(FlashcardNotFoundException::new);
         if(answer){
@@ -61,13 +63,15 @@ public class FlashcardService {
             return flashcard;
 
     }
-    public void deleteFlashcardFromSet(Long id,Long flashcardId){
+    @Override
+    public void deleteFlashcardFromSet(Long id, Long flashcardId){
         FlashcardSet set = setRepository.findById(id)
                 .orElseThrow(SetNotFoundException::new);
         Flashcard flashcard = flashcardRepository.findById(flashcardId).orElseThrow(()->new UsernameNotFoundException("User not found"));
         set.removeFlashcard(flashcard);
         flashcardRepository.delete(flashcard);
     }
+    @Override
     public Flashcard changeFlashcardsFrontAndBack(FlashcardPutDto flashcardPutDto, Long id){
         Flashcard flashcard = flashcardRepository.findById(id).orElseThrow(FlashcardNotFoundException::new);
         flashcard.setFront(flashcardPutDto.getFront());

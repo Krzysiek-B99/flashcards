@@ -1,7 +1,7 @@
 package com.example.flashcards.controller;
 
 import com.example.flashcards.service.FlashcardService;
-import com.example.flashcards.service.SetService;
+import com.example.flashcards.service.ISetService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -10,19 +10,19 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/learn")
 public class LearnController {
 
-    private final SetService setService;
+    private final ISetService ISetService;
 
     private final FlashcardService flashcardService;
 
-    public LearnController(SetService setService, FlashcardService flashcardService) {
-        this.setService = setService;
+    public LearnController(ISetService ISetService, FlashcardService flashcardService) {
+        this.ISetService = ISetService;
         this.flashcardService = flashcardService;
     }
 
     @GetMapping("/sets/{id}")
     @PreAuthorize("authentication.principal.id.equals(@userService.getUserIdBySetId(#id))")
     public ResponseEntity<?> learnSetById(@PathVariable Long id){
-       return ResponseEntity.ok(setService.getFlashcardsToRepeat(id));
+       return ResponseEntity.ok(ISetService.getFlashcardsToRepeat(id));
     }
     @PutMapping({"/sets/{id}/{flashcardId}/{answer}"})
     @PreAuthorize("authentication.principal.id.equals(@userService.getUserIdBySetId(#id))")

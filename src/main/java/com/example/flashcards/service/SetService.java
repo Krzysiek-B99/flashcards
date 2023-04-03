@@ -15,11 +15,10 @@ import org.springframework.stereotype.Service;
 import javax.validation.Valid;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Objects;
 import java.util.Set;
 
 @Service
-public class SetService {
+public class SetService implements ISetService {
 
     private final SetRepository setRepository;
     private final UserRepository userRepository;
@@ -32,6 +31,7 @@ public class SetService {
         this.mapStructMapper = mapStructMapper;
     }
 
+    @Override
     public void addSet(String username, FlashcardSet set){
 
         User user = userRepository.findByUsername(username)
@@ -41,29 +41,34 @@ public class SetService {
         userRepository.save(user);
     }
 
+    @Override
     public Set<SetSlimDto> getSets(String username) {
         User user = userRepository.findByUsername(username)
                 .orElseThrow(()->new UsernameNotFoundException("User not found"));
         return mapStructMapper.flashcardSetsToSetsSlimDto(user.getSets());
     }
 
+    @Override
     public FlashcardSet getSetById(Long id){
         return setRepository.findById(id)
                  .orElseThrow(SetNotFoundException::new);
     }
 
+    @Override
     public void deleteSet(Long id){
         FlashcardSet set = setRepository.findById(id)
                 .orElseThrow(SetNotFoundException::new);
         setRepository.delete(set);
     }
 
+    @Override
     public List<Flashcard> getFlashcardsToRepeat(Long id){
         FlashcardSet set = setRepository.findById(id)
                 .orElseThrow(SetNotFoundException::new);
         return set.getFlashcards().stream().filter(flashcard -> flashcard.getRepeatTime().isBefore(LocalDateTime.now())).toList();
     }
-    public SetSlimDto changeSetNameAndPrivacy(Long id,@Valid SetPutDto setPutDto){
+    @Override
+    public SetSlimDto changeSetNameAndPrivacy(Long id, SetPutDto setPutDto){
         FlashcardSet set = setRepository.findById(id)
                 .orElseThrow(SetNotFoundException::new);
         set.setName(setPutDto.getName());
