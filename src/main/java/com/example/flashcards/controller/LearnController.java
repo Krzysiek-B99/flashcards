@@ -12,11 +12,11 @@ public class LearnController {
 
     private final ISetService ISetService;
 
-    private final FlashcardService flashcardService;
+    private final FlashcardService IflashcardService;
 
-    public LearnController(ISetService ISetService, FlashcardService flashcardService) {
+    public LearnController(ISetService ISetService, FlashcardService IflashcardService) {
         this.ISetService = ISetService;
-        this.flashcardService = flashcardService;
+        this.IflashcardService = IflashcardService;
     }
 
     @GetMapping("/sets/{id}")
@@ -27,6 +27,6 @@ public class LearnController {
     @PutMapping({"/sets/{id}/{flashcardId}/{answer}"})
     @PreAuthorize("authentication.principal.id.equals(@userService.getUserIdBySetId(#id))")
     public ResponseEntity<?> ReceiveFlashcardAnswer(@PathVariable Long flashcardId, @PathVariable Long id,@PathVariable boolean answer){
-        return ResponseEntity.ok(flashcardService.changeFlashcardsLevelBasedOnAnswer(flashcardId,answer));
+        return ResponseEntity.ok(IflashcardService.changeFlashcardsLevelBasedOnAnswer(flashcardId,answer));
     }
 }

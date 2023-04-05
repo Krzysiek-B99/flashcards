@@ -4,7 +4,10 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.http.HttpStatus;
+
+import javax.persistence.ElementCollection;
 import java.util.Date;
+import java.util.List;
 
 @Getter
 @Setter
@@ -17,7 +20,8 @@ public class ErrorResponse {
 
     private String status;
 
-    private String message;
+    @ElementCollection
+    private List<String> messages;
 
     private String stackTrace;
 
@@ -29,23 +33,23 @@ public class ErrorResponse {
 
     public ErrorResponse(
             HttpStatus httpStatus,
-            String message
+            List<String> messages
     ) {
         this();
 
         this.code = httpStatus.value();
         this.status = httpStatus.name();
-        this.message = message;
+        this.messages = messages;
     }
 
     public ErrorResponse(
             HttpStatus httpStatus,
-            String message,
+            List<String> messages,
             String stackTrace
     ) {
         this(
                 httpStatus,
-                message
+                messages
         );
 
         this.stackTrace = stackTrace;
@@ -53,13 +57,13 @@ public class ErrorResponse {
 
     public ErrorResponse(
             HttpStatus httpStatus,
-            String message,
+            List<String> messages,
             String stackTrace,
             Object data
     ) {
         this(
                 httpStatus,
-                message,
+                messages,
                 stackTrace
         );
 
